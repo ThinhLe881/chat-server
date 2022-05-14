@@ -1,1 +1,1 @@
-# chat-server
+# Chat Server - Thinh Le
