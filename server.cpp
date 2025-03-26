@@ -42,6 +42,18 @@ void *broadcast(void *data)
 {
 	int fd = *(int *)data;
 
+	// Send the history of 12 msgs to client when started
+	pthread_mutex_lock(&mutex);
+
+	std::string prev_msgs = "";
+	for (auto msg = chatlog.begin(); msg != chatlog.end(); msg++)
+	{
+		prev_msgs += (*msg);
+	}
+	RobustIO::write_string(fd, prev_msgs);
+
+	pthread_mutex_unlock(&mutex);
+
 	while (true)
 	{
 		// Set cancellation point for pthread_cancel()
@@ -52,11 +64,8 @@ void *broadcast(void *data)
 		{
 			pthread_mutex_lock(&mutex);
 
-			std::string prev_msgs = "";
-			for (auto msg = chatlog.begin(); msg != chatlog.end(); msg++)
-			{
-				prev_msgs += (*msg);
-			}
+			prev_msgs = chatlog.back();
+
 			RobustIO::write_string(fd, prev_msgs);
 
 			flag = false;

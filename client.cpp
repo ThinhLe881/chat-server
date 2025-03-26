@@ -18,6 +18,7 @@
 
 int sock;
 pthread_t tid;
+std::string chatlog = "";
 
 // Update chat log with new messages
 void *update_log(void *data)
@@ -34,7 +35,8 @@ void *update_log(void *data)
         printf("---Enter 'exit' to exit the chatroom---\n");
         printf("\n");
 
-        printf("%s", res.c_str());
+        chatlog += res;
+        printf("%s", chatlog.c_str());
         printf("\n>> ");
 
         if (fflush(stdout) != 0)
